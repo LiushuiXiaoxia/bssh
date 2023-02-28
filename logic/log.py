@@ -1,7 +1,10 @@
 import logging
 import os
+import platform
 from logging.handlers import RotatingFileHandler
 
+import g
+import logic.util.filekit
 from logic.config import currentEnv, ENV_DEVELOPMENT
 
 
@@ -14,7 +17,14 @@ def init_log():
         logging.basicConfig(level=logging.DEBUG, format=mf, datefmt=tf)
     else:
         logging.basicConfig(level=logging.INFO, format=mf, datefmt=tf)
-        log_dir = '/tmp/logs/bssh'
+        sys = platform.system()
+        if sys == "Linux":
+            log_dir = f'/tmp/log/{g.APP_NAME}'
+            log_dir = logic.util.filekit.get_app_log_dir()
+        elif sys == "Windows":
+            log_dir = logic.util.filekit.get_app_log_dir()
+        else:
+            log_dir = f'/tmp/logs/{g.APP_NAME}'
 
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
