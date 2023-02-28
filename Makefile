@@ -22,4 +22,4 @@ runQtDesigner:
 	source venv/bin/activate && pyside2-designer
 
 runApp:
-	open dist/bssh.app
+	bash z-script/runApp.sh
