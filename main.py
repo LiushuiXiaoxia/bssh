@@ -1,9 +1,10 @@
-import os
+from encodings import idna
 
 import logic
 import page
 
 if __name__ == '__main__':
-    os.environ['QT_MAC_WANTS_LAYER'] = '1'
+    print(f'idna = {idna}')
+
     logic.setup()
     page.start_ui()
