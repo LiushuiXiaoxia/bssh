@@ -35,8 +35,13 @@ class MainPage(QtWidgets.QMainWindow):
         self.ui.cbSelectAll.stateChanged.connect(self.select_all_change)
 
         self.ui.btnRun.setEnabled(False)
+        f = self.ui.edtCmd.font()
+        f.setPointSizeF(15)
+        self.ui.edtCmd.setFont(f)
         if isDev():
-            self.ui.edtCmd.setText("\n".join(g.testCmd))
+            self.ui.edtCmd.setPlainText("\n".join(g.testCmd))
+        else:
+            self.ui.edtCmd.setPlainText("")
 
         self.output_signal.connect(lambda p: self.exec_callback_update(p))
         self.hosts_signal.connect(lambda p: self._update_host_by_signal())
