@@ -8,8 +8,8 @@ bus = EventBus()
 
 APP_NAME = "bssh"
 APP_FULL_NAME = "batch ssh client"
-APP_VERSION = 2
-APP_VERSION_NAME = '0.0.2'
+APP_VERSION = 3
+APP_VERSION_NAME = '0.0.3'
 
 REMOVE_COLOR = True
 
