@@ -1,4 +1,5 @@
 import logging
+import re
 
 import paramiko
 
@@ -13,6 +14,11 @@ STATUS_RUNNING = 'running'
 STATUS_SUCCESS = 'success'
 STATUS_FAILED = 'fail'
 
+
+def filter_line(line):
+    if g.REMOVE_COLOR:
+        return re.compile(r'\x1b[^m]*m').sub('', line)
+    return line
 
 class MySshClient:
 
@@ -37,6 +43,8 @@ class MySshClient:
             # self.client.connect(model.ip, model.port, model.username, timeout=5)
             self.client.connect(model.ip, model.port, model.username, model.password, timeout=5)
             logging.info(msg)
+
+            # self.client.exec_command('bash -l -c "sanity;" ', get_pty=True)
 
             self.connect_success = True
             self.status = STATUS_CONNECTED
@@ -74,11 +82,14 @@ class MySshClient:
             callback(self, ResultMsg(key, cmd, status=logic.model.STATUS_RUN_BEGIN))
 
             if len(cmd) > 0:
-                stdin, stdout, stderr = self.client.exec_command(cmd)
+                c = f"bash -lc \"{cmd} \" "
+                stdin, stdout, stderr = self.client.exec_command(c, get_pty=True)
+                # stdin, stdout, stderr = self.client.exec_command(cmd)
                 while True:
                     line = stdout.readline()
                     if not line:
                         break
+                    line = filter_line(line)
                     callback(self, ResultMsg(key, line.rstrip(), status=logic.model.STATUS_RUNNING))
                     logging.info(f'[{model.ip}/I] {line.rstrip()}')
 
@@ -86,6 +97,7 @@ class MySshClient:
                     line = stderr.readline()
                     if not line:
                         break
+                    line = filter_line(line)
                     callback(self, ResultMsg(key, line.rstrip(), err=True, status=logic.model.STATUS_RUNNING))
                     logging.info(f'[{model.ip}/E] {line.rstrip()}')
 

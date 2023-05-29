@@ -11,6 +11,8 @@ APP_FULL_NAME = "batch ssh client"
 APP_VERSION = 2
 APP_VERSION_NAME = '0.0.2'
 
+REMOVE_COLOR = True
+
 _count = max(20, multiprocessing.cpu_count() * 2)
 print(f'count = {_count}')
 pool = ThreadPoolExecutor(max_workers=_count)
@@ -20,6 +22,7 @@ testCmd = [
     "hostname",
     "ls -l",
     "bash test.sh",
+    "supervisorctl status"
 ]
 
 testHosts = '''
